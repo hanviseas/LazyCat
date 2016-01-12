@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<browsers>
+	<browser key="SafariV2" name="Safari" version="2" platform="Mac" />
+	<browser key="ChromeV3" name="Chrome" version="3" platform="WINDOWS" />
+</browsers>

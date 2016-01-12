@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cases>
+	<case key="Demo" name="演示" description="" script="global.Demo" />
+	<case key="Demo2" name="演示2" description="" script="global.Demo2" />
+</cases>
