@@ -27,7 +27,7 @@ public class Config {
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			doc = docBuilder.parse(inputStream);
 		} catch (Exception e) { // 配置文件读取错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 

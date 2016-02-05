@@ -94,7 +94,7 @@ public class Commander {
 				threadPool.shutdown();
 				threadPool.awaitTermination(24, TimeUnit.HOURS);
 			} catch (Exception e) { // 线程错误
-				System.out.println(e);
+				e.printStackTrace();
 			}
 			Report.save();
 		} else if (Server.getRunMode().equals("local")) {

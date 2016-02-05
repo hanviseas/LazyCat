@@ -81,7 +81,7 @@ public class Report {
 			printStream.println(stringBuilder.toString());
 			printStream.close();
 		} catch (Exception e) { // 生成错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 }

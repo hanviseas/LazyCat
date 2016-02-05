@@ -84,7 +84,7 @@ public class PageDriver {
 		try {
 			url = new URL("http://" + serverUrl + "/wd/hub");
 		} catch (Exception e) { // URL配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return new RemoteWebDriver(url, capability);
 	}

@@ -29,17 +29,13 @@ public class CaseMap {
 		for (int i = 0; i < caseList.getLength(); i++) { // 获取所有用例的全部配置信息
 			NamedNodeMap caseAttrs = caseList.item(i).getAttributes();
 			HashMap<String, String> attrMap = new HashMap<String, String>();
-			String caseKey = Config.getNodeString(caseAttrs.getNamedItem("key"));
-			if (caseKey.equals("")) { // 用例名错误
-				continue;
-			}
 			attrMap.put("name", Config.getNodeString(caseAttrs.getNamedItem("name")));
 			attrMap.put("description", Config.getNodeString(caseAttrs.getNamedItem("description")));
 			attrMap.put("script", Config.getNodeString(caseAttrs.getNamedItem("script")));
 			attrMap.put("pageLoadTimeout", Config.getNodeString(caseAttrs.getNamedItem("pageLoadTimeout")));
 			attrMap.put("scriptTimeout", Config.getNodeString(caseAttrs.getNamedItem("scriptTimeout")));
 			attrMap.put("implicitlyWait", Config.getNodeString(caseAttrs.getNamedItem("implicitlyWait")));
-			caseMap.put(caseKey, attrMap);
+			caseMap.put("Case-" + i, attrMap);
 		}
 		return caseMap;
 	}

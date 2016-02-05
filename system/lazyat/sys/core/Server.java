@@ -46,7 +46,7 @@ public final class Server extends Thread {
 			runMode = ConfigMap.getMap().get("normal").get("mode");
 			runMode = runMode.equals("") ? "local" : runMode;
 		} catch (Exception e) { // 配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return runMode;
 	}
@@ -70,7 +70,7 @@ public final class Server extends Thread {
 			remoteHost = ConfigMap.getMap().get("normal").get("remote");
 			remoteHost = remoteHost.equals("") ? "127.0.0.1:4444" : remoteHost;
 		} catch (Exception e) { // 配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return remoteHost;
 	}
@@ -93,7 +93,7 @@ public final class Server extends Thread {
 		try { // 读取配置错误时，默认设为30秒
 			pageLoadTimeout = Integer.parseInt(ConfigMap.getMap().get("timeout").get("page"));
 		} catch (Exception e) { // 配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return pageLoadTimeout;
 	}
@@ -116,7 +116,7 @@ public final class Server extends Thread {
 		try { // 读取配置错误时，默认设为30秒
 			scriptTimeout = Integer.parseInt(ConfigMap.getMap().get("timeout").get("script"));
 		} catch (Exception e) { // 配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return scriptTimeout;
 	}
@@ -139,7 +139,7 @@ public final class Server extends Thread {
 		try { // 读取配置错误时，默认设为10秒
 			implicitlyWait = Integer.parseInt(ConfigMap.getMap().get("timeout").get("implicitness"));
 		} catch (Exception e) { // 配置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return implicitlyWait;
 	}

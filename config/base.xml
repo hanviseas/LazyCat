@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configs>
 	<config group="normal">
-		<mode>remote</mode>
+		<mode>local</mode>
 		<remote>127.0.0.1:4444</remote>
 	</config>
 	<config group="timeout">

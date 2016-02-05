@@ -11,11 +11,6 @@ import org.openqa.selenium.WebDriver;
 public class Browser extends Thread {
 
 	/**
-	 * key: 浏览器配置索引
-	 */
-	private String key = "";
-
-	/**
 	 * name: 浏览器名
 	 */
 	private String name = "";
@@ -71,15 +66,16 @@ public class Browser extends Thread {
 
 	/**
 	 * initPageLoadTimeout: 初始化页面超时时间
+	 * @param key 浏览器配置索引
 	 * @return pageLoadTimeout 页面超时时间
 	 */
-	private Integer initPageLoadTimeout() {
+	private Integer initPageLoadTimeout(String key) {
 		Integer pageLoadTimeout = Server.getPageLoadTimeout();
 		try { // 读取配置错误或无配置时，使用全局配置
 			String pageLoadValue = BrowserMap.getMap().get(key).get("pageLoadTimeout"); // 覆盖全局配置
 			pageLoadTimeout = (!pageLoadValue.equals("")) ? Integer.parseInt(pageLoadValue) : Server.getPageLoadTimeout();
 		} catch (Exception e) { // 配置设置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return pageLoadTimeout;
 	}
@@ -95,15 +91,16 @@ public class Browser extends Thread {
 
 	/**
 	 * initScriptTimeout: 初始化脚本超时时间
+	 * @param key 浏览器配置索引
 	 * @return scriptTimeout 脚本超时时间
 	 */
-	private Integer initScriptTimeout() {
+	private Integer initScriptTimeout(String key) {
 		Integer scriptTimeout = Server.getScriptTimeout();
 		try { // 读取配置错误或无配置时，使用全局配置
 			String scriptValue = BrowserMap.getMap().get(key).get("scriptTimeout"); // 覆盖全局配置
 			scriptTimeout = (!scriptValue.equals("")) ? Integer.parseInt(scriptValue) : Server.getScriptTimeout();
 		} catch (Exception e) { // 配置设置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return scriptTimeout;
 	}
@@ -119,15 +116,16 @@ public class Browser extends Thread {
 
 	/**
 	 * initImplicitlyWait: 初始化等待超时时间
+	 * @param key 浏览器配置索引
 	 * @return implicitlyWait 等待超时时间
 	 */
-	private Integer initImplicitlyWait() {
+	private Integer initImplicitlyWait(String key) {
 		Integer implicitlyWait = Server.getImplicitlyWait();
 		try { // 读取配置错误或无配置时，使用全局配置
 			String implicitnessValue = BrowserMap.getMap().get(key).get("implicitlyWait"); // 覆盖全局配置
 			implicitlyWait = (!implicitnessValue.equals("")) ? Integer.parseInt(implicitnessValue) : Server.getImplicitlyWait();
 		} catch (Exception e) { // 配置设置错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 		return implicitlyWait;
 	}
@@ -138,13 +136,12 @@ public class Browser extends Thread {
 	 * @return browser 对象实例
 	 */
 	public Browser initial(String key) {
-		this.key = key;
 		name = BrowserMap.getMap().get(key).get("name"); // 根据索引获取浏览器名、版本号、系统平台配置
 		version = BrowserMap.getMap().get(key).get("version");
 		platform = BrowserMap.getMap().get(key).get("platform");
-		pageLoadTimeout = initPageLoadTimeout();
-		scriptTimeout = initScriptTimeout();
-		implicitlyWait = initImplicitlyWait();
+		pageLoadTimeout = initPageLoadTimeout(key);
+		scriptTimeout = initScriptTimeout(key);
+		implicitlyWait = initImplicitlyWait(key);
 		return this;
 	}
 
@@ -168,7 +165,7 @@ public class Browser extends Thread {
 				try {
 					runCase(Server.getCommander().getCaseQueue().poll());
 				} catch (Exception e) { // 并发错误
-					System.out.println(e);
+					e.printStackTrace();
 				}
 			}
 		}
@@ -207,7 +204,7 @@ public class Browser extends Thread {
 			Case testCase = (Case) Class.forName("lazyat.tc." + caseScript).newInstance();
 			testCase.initial(caseKey).launch();
 		} catch (Exception e) { // Case文件初始化错误
-			System.out.println(e);
+			e.printStackTrace();
 		}
 	}
 }

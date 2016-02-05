@@ -29,17 +29,13 @@ public class BrowserMap {
 		for (int i = 0; i < browserList.getLength(); i++) { // 获取所有浏览器的全部配置信息
 			NamedNodeMap browserAttrs = browserList.item(i).getAttributes();
 			HashMap<String, String> attrMap = new HashMap<String, String>();
-			String browserKey = Config.getNodeString(browserAttrs.getNamedItem("key"));
-			if (browserKey.equals("")) { // 浏览器名错误
-				continue;
-			}
 			attrMap.put("name", Config.getNodeString(browserAttrs.getNamedItem("name")));
 			attrMap.put("version", Config.getNodeString(browserAttrs.getNamedItem("version")));
 			attrMap.put("platform", Config.getNodeString(browserAttrs.getNamedItem("platform")));
 			attrMap.put("pageLoadTimeout", Config.getNodeString(browserAttrs.getNamedItem("pageLoadTimeout")));
 			attrMap.put("scriptTimeout", Config.getNodeString(browserAttrs.getNamedItem("scriptTimeout")));
 			attrMap.put("implicitlyWait", Config.getNodeString(browserAttrs.getNamedItem("implicitlyWait")));
-			browserMap.put(browserKey, attrMap);
+			browserMap.put("Browser-" + i, attrMap);
 		}
 		return browserMap;
 	}
