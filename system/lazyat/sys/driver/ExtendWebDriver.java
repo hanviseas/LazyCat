@@ -9,25 +9,21 @@ import org.openqa.selenium.WebElement;
 public class ExtendWebDriver {
 
 	/**
-	 * driver: 浏览器测试驱动
-	 */
-	private WebDriver driver = null;
-
-	public WebDriver getDriver() {
-		return driver;
-	}
-
-	/**
 	 * ExtendWebDriver: 构建方法
-	 * @param driver 浏览器测试驱动
+	 * @param driver 测试驱动
 	 */
 	public ExtendWebDriver(WebDriver driver) {
 		this.driver = driver;
 	}
 
 	/**
-	 * id: 根询id属性查找页面元素
-	 * @param id id属性
+	 * driver: 测试驱动
+	 */
+	private WebDriver driver = null;
+
+	/**
+	 * id: 根据id属性查找页面元素
+	 * @param id 属性
 	 * @return webElement 页面元素
 	 */
 	public WebElement id(String id) {

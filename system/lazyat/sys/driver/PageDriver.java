@@ -16,19 +16,10 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 public class PageDriver {
 
 	/**
-	 * driver: 浏览器测试驱动
-	 */
-	private WebDriver driver = null;
-
-	public WebDriver getDriver() {
-		return driver;
-	}
-
-	/**
 	 * PageDriver: 构建方法
 	 */
 	public PageDriver() {
-		driver = getLocalDriver("IE");
+		driver = getLocalDriver("Firefox");
 	}
 
 	/**
@@ -50,26 +41,40 @@ public class PageDriver {
 	}
 
 	/**
+	 * driver: 测试驱动
+	 */
+	private WebDriver driver = null;
+
+	public WebDriver getDriver() {
+		return driver;
+	}
+
+	/**
 	 * getLocalDriver: 获取本地测试驱动
 	 * @param browserName 浏览器名
-	 * @return driver 本地测试驱动
+	 * @return driver 测试驱动
 	 */
 	private WebDriver getLocalDriver(String browserName) {
-		switch (browserName.toLowerCase()) {
-		case "firefox":
-			return new FirefoxDriver();
-		case "chrome":
-			return new ChromeDriver();
-		case "opera":
-			return new OperaDriver();
-		case "safari":
-			return new SafariDriver();
-		case "ie":
-			return new InternetExplorerDriver();
-		case "edge":
-			return new EdgeDriver();
-		default:
-			return new InternetExplorerDriver();
+		try {
+			switch (browserName.toLowerCase()) {
+			case "firefox":
+				return new FirefoxDriver();
+			case "chrome":
+				return new ChromeDriver();
+			case "opera":
+				return new OperaDriver();
+			case "safari":
+				return new SafariDriver();
+			case "ie":
+				return new InternetExplorerDriver();
+			case "edge":
+				return new EdgeDriver();
+			default:
+				return new FirefoxDriver();
+			}
+		} catch (Exception e) { // 驱动加载错误
+			e.printStackTrace();
+			return null;
 		}
 	}
 
@@ -77,16 +82,16 @@ public class PageDriver {
 	 * getRemoteDriver: 获取远程测试驱动
 	 * @param serverUrl 服务端地址
 	 * @param capability 浏览器设定
-	 * @return driver 远程测试驱动
+	 * @return driver 测试驱动
 	 */
 	private WebDriver getRemoteDriver(String serverUrl, DesiredCapabilities capability) {
-		URL url = null;
 		try {
-			url = new URL("http://" + serverUrl + "/wd/hub");
-		} catch (Exception e) { // URL配置错误
+			URL url = new URL("http://" + serverUrl + "/wd/hub");
+			return new RemoteWebDriver(url, capability);
+		} catch (Exception e) { // 驱动加载错误
 			e.printStackTrace();
+			return null;
 		}
-		return new RemoteWebDriver(url, capability);
 	}
 
 	/**
@@ -97,8 +102,7 @@ public class PageDriver {
 	 * @return capability 浏览器设定
 	 */
 	private DesiredCapabilities getCapability(String browserName, String browserVersion, String browserPlatform) {
-		DesiredCapabilities capability = DesiredCapabilities.internetExplorer();
-		Platform platform = Platform.WINDOWS;
+		DesiredCapabilities capability = null;
 		switch (browserName.toLowerCase()) {
 		case "firefox":
 			capability = DesiredCapabilities.firefox();
@@ -125,20 +129,24 @@ public class PageDriver {
 			capability = DesiredCapabilities.edge();
 			capability.setBrowserName("edge");
 			break;
+		default:
+			capability = DesiredCapabilities.firefox();
+			capability.setBrowserName("firefox");
 		}
 		switch (browserPlatform.toLowerCase()) {
 		case "windows":
-			platform = Platform.WINDOWS;
+			capability.setPlatform(Platform.WINDOWS);
 			break;
 		case "linux":
-			platform = Platform.LINUX;
+			capability.setPlatform(Platform.LINUX);
 			break;
 		case "mac":
-			platform = Platform.MAC;
+			capability.setPlatform(Platform.MAC);
 			break;
+		default:
+			capability.setPlatform(Platform.WINDOWS);
 		}
 		capability.setVersion(browserVersion);
-		capability.setPlatform(platform);
 		return capability;
 	}
 }

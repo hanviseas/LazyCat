@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configs>
-	<config group="normal">
+<root>
+	<group name="normal">
 		<mode>local</mode>
 		<remote>127.0.0.1:4444</remote>
-	</config>
-	<config group="timeout">
+	</group>
+	<group name="timeout">
 		<page>30</page>
 		<script>30</script>
 		<implicitness>10</implicitness>
-	</config>
-</configs>
+	</group>
+</root>

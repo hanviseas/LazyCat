@@ -37,9 +37,9 @@ public class Config {
 	 * @return text 节点文本值
 	 */
 	public String readTag(String tagName) {
-		NodeList list = doc.getElementsByTagName(tagName);
-		if (list.getLength() > 0) { // 如果有多个节点名称相同，只读取第一个节点
-			return list.item(0).getFirstChild().getNodeValue().toString();
+		NodeList nodeList = doc.getElementsByTagName(tagName);
+		if (nodeList.getLength() > 0) { // 如果有多个节点名称相同，只读取第一个节点
+			return nodeList.item(0).getFirstChild().getNodeValue().toString();
 		}
 		return "";
 	}
@@ -54,11 +54,21 @@ public class Config {
 	}
 
 	/**
-	 * getNodeString: 获取节点文本值
+	 * getNodeValue: 获取节点文本值
 	 * @param node 节点
 	 * @return text 节点文本值
 	 */
-	public static String getNodeString(Node node) {
+	public static String getNodeValue(Node node) {
 		return (node != null) ? node.getNodeValue().toString() : "";
+	}
+
+	/**
+	 * getNodeAttrValue: 获取节点属性值
+	 * @param node 节点
+	 * @param attr 属性
+	 * @return text 节点属性值
+	 */
+	public static String getNodeAttrValue(Node node, String attr) {
+		return getNodeValue(node.getAttributes().getNamedItem(attr));
 	}
 }

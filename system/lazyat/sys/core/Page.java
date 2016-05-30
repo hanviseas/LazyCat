@@ -5,7 +5,7 @@ import lazyat.sys.driver.ExtendWebDriver;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.PageFactory;
 
-public abstract class Page {
+public class Page {
 
 	/**
 	 * Page: 构建方法
@@ -18,41 +18,22 @@ public abstract class Page {
 	/**
 	 * browser: 浏览器对象实例
 	 */
-	protected Browser browser = initBrowser();
+	protected Browser browser = Server.getCommander().getThreadMap().get(Thread.currentThread().getId());
 
 	/**
-	 * initBrowser: 初始化浏览器对象实例
-	 * @return browser 浏览器对象实例
+	 * driver: 测试驱动
 	 */
-	protected Browser initBrowser() {
-		return Server.getCommander().getThreadMap().get(Thread.currentThread().getId());
-	}
+	protected WebDriver driver = browser.getDriver();
 
 	/**
-	 * driver: 浏览器测试驱动
+	 * driverx: 扩展测试驱动
 	 */
-	protected WebDriver driver = initDriver();
+	protected ExtendWebDriver driverx = new ExtendWebDriver(driver);
 
 	/**
-	 * 初始化浏览器测试驱动
-	 * @return driver 浏览器测试驱动
+	 * log: 测试日志
 	 */
-	protected WebDriver initDriver() {
-		return browser.getDriver();
-	}
-
-	/**
-	 * driverx: 扩展浏览器测试驱动
-	 */
-	protected ExtendWebDriver driverx = initDriverx();
-
-	/**
-	 * 初始化扩展浏览器测试驱动
-	 * @return driverx 扩展浏览器测试驱动
-	 */
-	protected ExtendWebDriver initDriverx() {
-		return new ExtendWebDriver(driver);
-	}
+	protected Log log = browser.getLog();
 
 	/**
 	 * load: 页面载入执行代码
@@ -61,4 +42,12 @@ public abstract class Page {
 	protected void load() {
 		// 基类不做任何事
 	};
+
+	/**
+	 * getTitle: 获取页面标题
+	 * @return title 页面标题
+	 */
+	public String getTitle() {
+		return driver.getTitle();
+	}
 }

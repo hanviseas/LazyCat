@@ -1,10 +1,13 @@
 package lazyat.sys.core;
 
+import java.lang.reflect.Method;
 import java.util.Iterator;
 
+import lazyat.sys.annotation.DataSource;
 import lazyat.sys.driver.PageDriver;
 import lazyat.sys.map.BrowserMap;
 import lazyat.sys.map.CaseMap;
+import lazyat.sys.map.DataMap;
 
 import org.openqa.selenium.WebDriver;
 
@@ -38,7 +41,7 @@ public class Browser extends Thread {
 	}
 
 	/**
-	 * driver: 浏览器测试驱动
+	 * driver: 测试驱动
 	 */
 	private WebDriver driver = null;
 
@@ -47,12 +50,12 @@ public class Browser extends Thread {
 	}
 
 	/**
-	 * judge: 测试审判
+	 * log: 测试日志
 	 */
-	private Judge judge = new Judge();
+	private Log log = new Log();
 
-	public Judge getJudge() {
-		return judge;
+	public Log getLog() {
+		return log;
 	}
 
 	/**
@@ -146,64 +149,134 @@ public class Browser extends Thread {
 	}
 
 	/**
-	 * run: 远程浏览器并发测试
-	 * @return void
-	 */
-	public void run() {
-		judge.info("浏览器: " + name + " " + version + " >> 启动");
-		Server.getCommander().getThreadMap().put(Thread.currentThread().getId(), this);
-		Server.getCommander().getJudgeMap().put(name + " [ Version:" + version + " Platform:" + platform + " ]", judge);
-		driver = new PageDriver(name, version, platform, Server.getRemoteHost()).getDriver();
-		driver.manage().window().maximize();
-		if (Server.getRunMode().equals("remote")) { // 独立执行全部测试用例
-			Iterator<String> caseIterator = Server.getCommander().getCaseQueue().iterator();
-			while (caseIterator.hasNext()) {
-				runCase(caseIterator.next().toString());
-			}
-		} else if (Server.getRunMode().equals("multiple")) { // 共同分配执行全部用例
-			while (!Server.getCommander().getCaseQueue().isEmpty()) {
-				try {
-					runCase(Server.getCommander().getCaseQueue().poll());
-				} catch (Exception e) { // 并发错误
-					e.printStackTrace();
-				}
-			}
-		}
-		driver.close();
-		driver.quit();
-		judge.info("浏览器: " + name + " " + version + " >> 关闭");
-	}
-
-	/**
 	 * launch: 本地浏览器顺序测试
 	 * @return void
 	 */
 	public void launch() {
-		judge.info("浏览器: " + name + " " + version + " >> 启动");
+		log.info("浏览器: " + name + "-" + version + " >> 启动");
 		Server.getCommander().getThreadMap().put(Thread.currentThread().getId(), this);
-		Server.getCommander().getJudgeMap().put(name + " [ Version:" + version + " Platform:" + platform + " ]", judge);
+		Server.getCommander().getLogMap().put(name + " [ Version:" + version + " Platform:" + platform + " ]", log);
 		driver = new PageDriver(name).getDriver();
-		driver.manage().window().maximize();
+		if (driver == null) { // 驱动初始化失败
+			log.error("浏览器" + name + "-" + version + "启动失败");
+			return;
+		}
 		Iterator<String> caseIterator = CaseMap.getMap().keySet().iterator();
 		while (caseIterator.hasNext()) { // 顺序执行测试用例
-			runCase(caseIterator.next().toString());
+			callCase(caseIterator.next());
 		}
 		driver.close();
 		driver.quit();
-		judge.info("浏览器: " + name + " " + version + " >> 关闭");
+		log.info("浏览器: " + name + "-" + version + " >> 关闭");
 	}
 
 	/**
-	 * runCase: 运行用例
-	 * @param caseName 用例名
+	 * run: 远程浏览器并发测试
 	 * @return void
 	 */
-	private void runCase(String caseKey) {
-		try {
-			String caseScript = CaseMap.getMap().get(caseKey).get("script"); // 根据索引获取用例文件位置并实例化
-			Case testCase = (Case) Class.forName("lazyat.tc." + caseScript).newInstance();
-			testCase.initial(caseKey).launch();
+	public void run() {
+		log.info("浏览器: " + name + "-" + version + " >> 启动");
+		Server.getCommander().getThreadMap().put(Thread.currentThread().getId(), this);
+		Server.getCommander().getLogMap().put(name + " [ Version:" + version + " Platform:" + platform + " ]", log);
+		driver = new PageDriver(name, version, platform, Server.getRemoteHost()).getDriver();
+		if (driver == null) { // 驱动初始化失败
+			log.error("浏览器" + name + "-" + version + "启动失败");
+			return;
+		}
+		if (Server.getRunMode().equals("remote")) { // 独立执行全部测试用例
+			Iterator<String> caseIterator = Server.getCommander().getCaseQueue().iterator();
+			while (caseIterator.hasNext()) {
+				callCase(caseIterator.next());
+			}
+		} else if (Server.getRunMode().equals("multiple")) { // 共同分配执行全部用例
+			while (!Server.getCommander().getCaseQueue().isEmpty()) {
+				callCase(Server.getCommander().getCaseQueue().poll());
+			}
+		}
+		driver.close();
+		driver.quit();
+		log.info("浏览器: " + name + "-" + version + " >> 关闭");
+	}
+
+	/**
+	 * callCase: 调用用例
+	 * @param key 用例索引
+	 * @return void
+	 */
+	private void callCase(String key) {
+		String caseSrc = CaseMap.getMap().get(key).get("src");
+		try { // 通过反射实例化用例
+			Case testCase = (Case) Class.forName("lazyat.tc." + caseSrc).newInstance();
+			testCase.initial(key).launch();
+			log.info("测试用例: " + testCase.getNamex() + " >> 执行开始");
+			testCase.before(); // 可重写的前置方法
+			for (Method method : testCase.getClass().getDeclaredMethods()) { // 遍历所有类方法
+				if (method.getName().matches("^test.+")) { // 只运行以test开头的方法
+					callMethod(testCase, method);
+				}
+			}
+			testCase.after(); // 可重写的后置方法
+			log.info("测试用例: " + testCase.getNamex() + " >> 执行结束");
 		} catch (Exception e) { // Case文件初始化错误
+			log.error("用例" + caseSrc + "调用失败");
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * callMethod: 调用方法
+	 * @param tc 用例实例
+	 * @param method 方法实例
+	 * @return void
+	 */
+	private void callMethod(Case tc, Method method) {
+		if (method.isAnnotationPresent(DataSource.class)) { // 已声明数据源
+			DataSource dataSource = (DataSource) method.getAnnotation(DataSource.class);
+			Object[][] params = require(dataSource.src(), dataSource.field()); // 限定使用二维数组
+			if (dataSource.method() == DataSource.ONCE) { // 数据单次调用
+				invoke(tc, method, params[0]);
+			} else if (dataSource.method() == DataSource.ITERATION) { // 数据迭代调用
+				for (Object[] param : params) {
+					invoke(tc, method, param);
+				}
+			} else if (dataSource.method() == DataSource.SEQUENCE) { // 数据顺序调用
+				DataMap.regsiter(dataSource.src(), dataSource.field(), params);
+				invoke(tc, method, (Object[]) DataMap.use(dataSource.src(), dataSource.field()));
+			}
+		} else {
+			invoke(tc, method, new Object[] {}); // 未声明数据源则空参数调用
+		}
+	}
+
+	/**
+	 * require: 引用数据
+	 * @param src 数据源
+	 * @param field 数据字段
+	 * @return array 数据数组
+	 */
+	private Object[][] require(String src, String field) {
+		try { // 通过反射实例化数据
+			Data testData = (Data) Class.forName("lazyat.data." + src).newInstance();
+			return (Object[][]) testData.getClass().getField(field).get(testData);
+		} catch (Exception e) { // Data文件初始化错误
+			log.error("数据" + src + "@" + field + "调用失败");
+			e.printStackTrace();
+			return new Object[][] {};
+		}
+	}
+
+	/**
+	 * invoke: 调用方法
+	 * @param tc 用例实例
+	 * @param method 方法实例
+	 * @param param 调用参数
+	 * @return void
+	 */
+	private void invoke(Case tc, Method method, Object[] param) {
+		try { // 通过反射调用方法
+			method.invoke(tc, param);
+		} catch (Exception e) { // 方法调用初始化错误
+			log.error("方法" + method.getName() + "调用失败");
 			e.printStackTrace();
 		}
 	}

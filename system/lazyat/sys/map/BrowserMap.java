@@ -28,13 +28,16 @@ public class BrowserMap {
 		ConcurrentHashMap<String, HashMap<String, String>> browserMap = new ConcurrentHashMap<String, HashMap<String, String>>();
 		for (int i = 0; i < browserList.getLength(); i++) { // 获取所有浏览器的全部配置信息
 			NamedNodeMap browserAttrs = browserList.item(i).getAttributes();
+			if (Config.getNodeValue(browserAttrs.getNamedItem("enable")).equals("off")) { // 浏览器停用
+				continue;
+			}
 			HashMap<String, String> attrMap = new HashMap<String, String>();
-			attrMap.put("name", Config.getNodeString(browserAttrs.getNamedItem("name")));
-			attrMap.put("version", Config.getNodeString(browserAttrs.getNamedItem("version")));
-			attrMap.put("platform", Config.getNodeString(browserAttrs.getNamedItem("platform")));
-			attrMap.put("pageLoadTimeout", Config.getNodeString(browserAttrs.getNamedItem("pageLoadTimeout")));
-			attrMap.put("scriptTimeout", Config.getNodeString(browserAttrs.getNamedItem("scriptTimeout")));
-			attrMap.put("implicitlyWait", Config.getNodeString(browserAttrs.getNamedItem("implicitlyWait")));
+			attrMap.put("name", Config.getNodeValue(browserAttrs.getNamedItem("name")));
+			attrMap.put("version", Config.getNodeValue(browserAttrs.getNamedItem("version")));
+			attrMap.put("platform", Config.getNodeValue(browserAttrs.getNamedItem("platform")));
+			attrMap.put("pageLoadTimeout", Config.getNodeValue(browserAttrs.getNamedItem("pageLoadTimeout")));
+			attrMap.put("scriptTimeout", Config.getNodeValue(browserAttrs.getNamedItem("scriptTimeout")));
+			attrMap.put("implicitlyWait", Config.getNodeValue(browserAttrs.getNamedItem("implicitlyWait")));
 			browserMap.put("Browser-" + i, attrMap);
 		}
 		return browserMap;

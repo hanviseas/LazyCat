@@ -8,7 +8,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 
 public class MobileDriver {
 
-	public MobileDriver() { // 待测试阶段代码，暂不正式纳入使用
+	public void demo() { // 待测试阶段代码，暂不正式纳入使用
 
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 		capabilities.setCapability("deviceName", "iPhone 6 SIM");
@@ -17,8 +17,10 @@ public class MobileDriver {
 		capabilities.setCapability("browserName", "safari");
 
 		try {
-			WebDriver wd = new RemoteWebDriver(new URL("http://192.168.2.68:4723/wd/hub"), capabilities);
+			WebDriver wd = new RemoteWebDriver(new URL("http://192.168.2.76:4723/wd/hub"), capabilities);
 			wd.get("http://www.baidu.com");
+			wd.close();
+			wd.quit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

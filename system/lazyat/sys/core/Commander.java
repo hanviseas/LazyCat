@@ -31,12 +31,12 @@ public class Commander {
 	}
 
 	/**
-	 * judgeMap: 审判映射表
+	 * logMap: 日志映射表
 	 */
-	private ConcurrentHashMap<String, Judge> judgeMap = new ConcurrentHashMap<String, Judge>();
+	private ConcurrentHashMap<String, Log> logMap = new ConcurrentHashMap<String, Log>();
 
-	public ConcurrentHashMap<String, Judge> getJudgeMap() {
-		return judgeMap;
+	public ConcurrentHashMap<String, Log> getLogMap() {
+		return logMap;
 	}
 
 	/**
@@ -86,8 +86,7 @@ public class Commander {
 		if (Server.getRunMode().equals("remote") || Server.getRunMode().equals("multiple")) {
 			ExecutorService threadPool = Executors.newCachedThreadPool(); // 并发测试线程池
 			while (browserIterator.hasNext()) {
-				String browserKey = browserIterator.next().toString();
-				Browser browser = new Browser().initial(browserKey);
+				Browser browser = new Browser().initial(browserIterator.next().toString());
 				threadPool.execute(browser); // 远程测试，并发启动多浏览器
 			}
 			try { // 等待所有线程结束
@@ -99,8 +98,7 @@ public class Commander {
 			Report.save();
 		} else if (Server.getRunMode().equals("local")) {
 			while (browserIterator.hasNext()) {
-				String browserKey = browserIterator.next().toString();
-				Browser browser = new Browser().initial(browserKey);
+				Browser browser = new Browser().initial(browserIterator.next().toString());
 				browser.launch(); // 本地测试，按顺序启动多浏览器
 			}
 			Report.save();

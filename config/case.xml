@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cases>
-	<case name="测试" description="" script="global.Demo" />
-</cases>
+<root>
+	<suit>
+		<case name="演示用例-1" description="" src="demo.Demo1" />
+	</suit>
+	<suit enable="off">
+		<case enable="off" name="演示用例-2" description="" src="demo.Demo2" />
+	</suit>
+</root>

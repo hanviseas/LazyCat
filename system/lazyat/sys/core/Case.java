@@ -9,43 +9,40 @@ import org.openqa.selenium.TakesScreenshot;
 
 import lazyat.sys.map.CaseMap;
 
-public abstract class Case {
+public class Case {
 
 	/**
 	 * name: 用例名
 	 */
 	protected String name = "";
 
+	public String getNamex() {
+		return name;
+	}
+
 	/**
 	 * description: 用例描述
 	 */
 	protected String description = "";
 
+	public String getDescription() {
+		return description;
+	}
+
 	/**
 	 * browser: 浏览器对象实例
 	 */
-	protected Browser browser = initBrowser();
+	protected Browser browser = Server.getCommander().getThreadMap().get(Thread.currentThread().getId());
 
 	/**
-	 * initBrowser: 初始化浏览器对象实例
-	 * @return browser 浏览器对象实例
+	 * log: 测试日志
 	 */
-	protected Browser initBrowser() {
-		return Server.getCommander().getThreadMap().get(Thread.currentThread().getId());
-	}
+	protected Log log = browser.getLog();
 
 	/**
-	 * judge: 浏览器测试审判
+	 * judge: 测试审判
 	 */
-	protected Judge judge = initJudge();
-
-	/**
-	 * 初始化浏览器测试审判
-	 * @return judge 浏览器测试审判
-	 */
-	protected Judge initJudge() {
-		return browser.getJudge();
-	}
+	protected Judge judge = new Judge(log);
 
 	/**
 	 * pageLoadTimeout: 页面超时时间（秒）
@@ -130,22 +127,11 @@ public abstract class Case {
 	 * @return void
 	 */
 	public void launch() {
-		judge.info("测试用例: " + name + " >> 开始执行");
 		browser.getDriver().manage().timeouts().pageLoadTimeout(pageLoadTimeout, TimeUnit.SECONDS);
 		browser.getDriver().manage().timeouts().setScriptTimeout(scriptTimeout, TimeUnit.SECONDS);
 		browser.getDriver().manage().timeouts().implicitlyWait(implicitlyWait, TimeUnit.SECONDS);
 		browser.getDriver().manage().window().maximize();
-		before();
-		execute(); // 用例需要继承Case类并实现execute方法
-		after();
-		judge.info("测试用例: " + name + " >> 结束");
 	}
-
-	/**
-	 * execute: 用例主体执行代码
-	 * @return void
-	 */
-	protected abstract void execute();
 
 	/**
 	 * before: 用例前置代码
@@ -165,14 +151,14 @@ public abstract class Case {
 
 	/**
 	 * screenshot: 屏幕快照
-	 * @return path 快照文件路径
+	 * @return filePath 快照文件路径
 	 */
 	public String screenshot() {
 		String path = Server.getCommander().getNamex() + "/" + Server.generateId() + ".png";
 		try {
-			File source = ((TakesScreenshot) browser.getDriver()).getScreenshotAs(OutputType.FILE);
-			File target = new File("report/" + path); // 快照图片存放于report/{测试标识号}/目录下
-			FileUtils.copyFile(source, target);
+			File sourcePath = ((TakesScreenshot) browser.getDriver()).getScreenshotAs(OutputType.FILE);
+			File targetPath = new File("report/" + path); // 快照图片存放于report/{测试标识号}/目录下
+			FileUtils.copyFile(sourcePath, targetPath);
 		} catch (Exception e) { // 生成错误
 			e.printStackTrace();
 		}

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<browsers>
-	<!--<browser name="Safari" version="2" platform="Mac" />-->
-	<browser name="Chrome" version="3" platform="WINDOWS" />
-</browsers>
+<root>
+	<browser name="Firefox" version="1" platform="WINDOWS" />
+	<browser enable="off" name="Safari" version="2" platform="Mac" />
+	<browser enable="off" name="Chrome" version="3" platform="WINDOWS" />
+</root>
