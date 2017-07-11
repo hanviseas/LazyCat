@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+
+a {
+	color: #189dc3;
+}
+
+span {
+	font-family: Arial;
+	font-size: 14px;
+}
+
+.title {
+	height: 40px;
+	line-height: 40px;
+	margin-top: 30px;
+}
+
+.title span {
+	font-size: 18px;
+	font-weight: bold;
+}
+
+.line {
+	line-height: 30px;
+	border-bottom: dotted 1px #cacaca;
+}
+
+.inner {
+	padding: 0px 10px;
+}
+
+.head_line {
+	border: none;
+}
+
+.head_line>.col_time,.head_line>.col_message,.head_line>.col_remark {
+	background-color: #a2a2a2;
+}
+
+.col_time {
+	width: 19%;
+	float: left;
+	margin-right: 0.5%;
+}
+
+.col_message {
+	width: 45%;
+	float: left;
+	margin-right: 0.5%;
+	word-break: break-all;
+	word-wrap: break-word;
+}
+
+.col_remark {
+	width: 35%;
+	float: left;
+}
+
+.clear {
+	clear: both;
+}
