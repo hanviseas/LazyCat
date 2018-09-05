@@ -4,5 +4,5 @@
 	<browser driver="chromedriver_win_2.3.exe" name="Chrome" version="59.0" platform="WINDOWS" />
 	<browser enable="off" driver="chromedriver_linux_2.3" name="Chrome" version="59.0" platform="LINUX" />
 	<browser enable="off" driver="chromedriver_mac_2.3" name="Chrome" version="59.0" platform="MAC" />
-	<browser enable="off" driver="geckodriver_win_0.17.exe" name="Firefox" version="54.0" platform="WINDOWS" />
+	<browser enable="off" driver="geckodriver_win_0.19.exe" name="Firefox" version="54.0" platform="WINDOWS" />
 </root>
