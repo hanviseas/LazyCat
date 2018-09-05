@@ -36,7 +36,14 @@ public class Report {
 			Map.Entry<String, Log> logEntry = logIterator.next();
 			String logName = logEntry.getKey();
 			Log log = logEntry.getValue();
+			Integer[] summary = log.getSummary();
 			builder.append("<div class=\"title\"><span>" + logName + "</span></div>");
+			builder.append("<div class=\"summary\">");
+			builder.append("<span class=\"pass_num\">通过: " + summary[0] + "</span>");
+			builder.append("<span class=\"fail_num\">失败: " + summary[1] + "</span>");
+			builder.append("<span class=\"notice_num\">警告: " + summary[2] + "</span>");
+			builder.append("<span class=\"error_num\">错误: " + summary[3] + "</span>");
+			builder.append("</div>");
 			builder.append("<hr/>");
 			builder.append("<div class=\"line head_line\" style=\"color:#ffffff\">");
 			builder.append("<div class=\"col_time\"><div class=\"inner\"><span>时间</span></div></div>");

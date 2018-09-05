@@ -30,6 +30,15 @@ public class Case {
 	}
 
 	/**
+	 * quitFlag: 退出标记
+	 */
+	protected boolean quitFlag = false;
+
+	public boolean getQuitFlag() {
+		return quitFlag;
+	}
+
+	/**
 	 * interruptFlag: 中断标记
 	 */
 	protected boolean interruptFlag = false;
@@ -156,6 +165,14 @@ public class Case {
 	 */
 	protected void after() {
 		// 基类不做任何事
+	}
+
+	/**
+	 * stopAll: 中止测试
+	 * @return void
+	 */
+	public void stopAll() {
+		quitFlag = true;
 	}
 
 	/**

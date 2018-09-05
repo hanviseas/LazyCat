@@ -20,6 +20,37 @@ span {
 	font-weight: bold;
 }
 
+.summary {
+	height: 30px;
+	margin: 10px 0px;
+	line-height: 20px;
+	color: #ffffff;
+}
+
+.summary span {
+	display: block;
+	float: left;
+	margin-right: 15px;
+	padding: 3px 15px;
+	font-size: 12px;
+}
+
+.pass_num {
+	background-color: #4db376;
+}
+
+.fail_num {
+	background-color: #c43c3c;
+}
+
+.notice_num {
+	background-color: #b3b34d;
+}
+
+.error_num {
+	background-color: #c43c3c;
+}
+
 .line {
 	line-height: 30px;
 	border-bottom: dotted 1px #cacaca;

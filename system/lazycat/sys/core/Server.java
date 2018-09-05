@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Random;
 
 import lazycat.sys.map.ConfigMap;
@@ -17,8 +18,23 @@ public final class Server extends Thread {
 	 * @return void
 	 */
 	public static void main(String[] args) {
+		for (int i = 0; i < args.length; i++) {
+			String[] arg_group = args[i].split("="); // 存储命令行参数（key=value的形式）至_args
+			if (arg_group.length == 2 && arg_group[0].toString() != "" && arg_group[1].toString() != "") {
+				_args.put(arg_group[0].toString(), arg_group[1].toString());
+			}
+		}
 		Server.commander = new Commander();
 		commander.dispatch();
+	}
+
+	/**
+	 * _args: 参数表
+	 */
+	private static HashMap<String, String> _args = new HashMap<String, String>();
+
+	public static String getArg(String key) {
+		return _args.get(key);
 	}
 
 	/**
@@ -43,7 +59,7 @@ public final class Server extends Thread {
 	 * initCurrentPath: 初始化当前路径
 	 * @return currentPath 当前路径
 	 */
-	public static String initCurrentPath() {
+	private static String initCurrentPath() {
 		String currentPath = ".";
 		try { // 解析错误时，默认设为"."
 			String classPath = System.getProperty("java.class.path");
@@ -204,13 +220,5 @@ public final class Server extends Thread {
 		String time = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date());
 		String rand = String.format("%04d", new Random().nextInt(9999));
 		return time + "-" + rand;
-	}
-
-	/**
-	 * currentTime: 当前时间
-	 * @return time 当前时间
-	 */
-	public static String currentTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
 	}
 }

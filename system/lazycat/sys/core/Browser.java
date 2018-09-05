@@ -19,6 +19,11 @@ public class Browser extends Thread {
 	private String driverPath = "";
 
 	/**
+	 * quitFlag: 退出标记
+	 */
+	private boolean quitFlag = false;
+
+	/**
 	 * name: 浏览器名
 	 */
 	private String name = "";
@@ -167,7 +172,7 @@ public class Browser extends Thread {
 			log.error("浏览器" + name + "-" + version + "启动失败");
 			return;
 		}
-		while (!Server.getCommander().getCaseQueue().isEmpty()) { // 顺序执行测试用例
+		while (!Server.getCommander().getCaseQueue().isEmpty() && !quitFlag) { // 顺序执行测试用例
 			callCase(Server.getCommander().getCaseQueue().poll());
 		}
 		driver.close();
@@ -191,10 +196,10 @@ public class Browser extends Thread {
 		if (Server.getRunMode().equals("remote")) { // 独立执行全部测试用例
 			PriorityQueue<String> singleCaseQueue = new PriorityQueue<String>();
 			singleCaseQueue.addAll(BrowserMap.getMap().keySet()); // 单独为每个进程设置一个用例队列
-			while (!singleCaseQueue.isEmpty()) {
+			while (!singleCaseQueue.isEmpty() && !quitFlag) {
 				callCase(singleCaseQueue.poll());
 			}
-		} else if (Server.getRunMode().equals("multiple")) { // 共同分配执行全部用例
+		} else if (Server.getRunMode().equals("multiple") && !quitFlag) { // 共同分配执行全部用例
 			while (!Server.getCommander().getCaseQueue().isEmpty()) {
 				callCase(Server.getCommander().getCaseQueue().poll());
 			}
@@ -223,6 +228,11 @@ public class Browser extends Thread {
 				return;
 			}
 			for (Method method : testCase.getClass().getDeclaredMethods()) { // 遍历所有类方法
+				if (testCase.getQuitFlag()) { // 如果退出标记为真，结束全部测试
+					log.info("检测到退出标记，结束测试");
+					quitFlag = true;
+					return;
+				}
 				if (testCase.getInterruptFlag()) { // 如果中断标记为真，结束用例测试
 					log.info("检测到中断标记");
 					break;
@@ -309,13 +319,17 @@ public class Browser extends Thread {
 	 */
 	private void dealWithException(Exception e) {
 		Throwable cause = e.getCause();
-		String stackInfo = ""; // 错误信息包含文件名、类名、方法名、行号
-		for (StackTraceElement stackTrace : cause.getStackTrace()) {
-			stackInfo += stackTrace.getFileName() + " ";
-			stackInfo += stackTrace.getClassName() + " ";
-			stackInfo += stackTrace.getMethodName() + " ";
-			stackInfo += stackTrace.getLineNumber() + "\r\n";
+		if (cause == null) {
+			log.error("未知错误", e.toString());
+		} else {
+			String stackInfo = "";
+			for (StackTraceElement stackTrace : cause.getStackTrace()) { // 错误信息包含文件名、类名、方法名、行号
+				stackInfo += stackTrace.getFileName() + " ";
+				stackInfo += stackTrace.getClassName() + " ";
+				stackInfo += stackTrace.getMethodName() + " ";
+				stackInfo += stackTrace.getLineNumber() + "\r\n";
+			}
+			log.error(cause.toString(), stackInfo);
 		}
-		log.error(cause.toString(), stackInfo);
 	}
 }
