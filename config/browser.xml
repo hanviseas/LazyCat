@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <root>
-	<browser enable="off" name="HtmlUnit" version="x.0" platform="ALL" />
-	<browser driver="chromedriver_win_2.3.exe" name="Chrome" version="59.0" platform="WINDOWS" />
-	<browser enable="off" driver="chromedriver_linux_2.3" name="Chrome" version="59.0" platform="LINUX" />
-	<browser enable="off" driver="chromedriver_mac_2.3" name="Chrome" version="59.0" platform="MAC" />
-	<browser enable="off" driver="geckodriver_win_0.19.exe" name="Firefox" version="54.0" platform="WINDOWS" />
+	<browser status="disabled" driver="chromedriver_win32_2.42.exe" name="Chrome" version="69.0" platform="WINDOWS" />
+	<browser status="disabled" driver="chromedriver_linux64_2.42" name="Chrome" version="69.0" platform="LINUX" />
+	<browser status="enabled" driver="chromedriver_mac64_2.42" name="Chrome" version="69.0" platform="MAC" />
 </root>

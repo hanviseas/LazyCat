@@ -12,63 +12,68 @@ import org.w3c.dom.NodeList;
 
 public class Config {
 
-	/**
-	 * doc: 文档对象
-	 */
-	private Document doc = null;
+    /**
+     * doc: 文档对象
+     */
+    private Document doc = null;
 
-	/**
-	 * Config: 构建方法
-	 * @param fileName 文件名
-	 */
-	public Config(String fileName) {
-		try {
-			FileInputStream inputStream = new FileInputStream(new File(fileName)); // 读取XML格式配置文件
-			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			doc = docBuilder.parse(inputStream);
-		} catch (Exception e) { // 配置文件读取错误
-			e.printStackTrace();
-		}
-	}
+    /**
+     * Config: 构建方法
+     *
+     * @param fileName 文件名
+     */
+    public Config(String fileName) {
+        try {
+            FileInputStream inputStream = new FileInputStream(new File(fileName)); // 读取XML格式配置文件
+            DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            doc = docBuilder.parse(inputStream);
+        } catch (Exception e) { // 配置文件读取错误
+            e.printStackTrace();
+        }
+    }
 
-	/**
-	 * readTag: 读取节点文本值
-	 * @param tagName 节点名称
-	 * @return text 节点文本值
-	 */
-	public String readTag(String tagName) {
-		NodeList nodeList = doc.getElementsByTagName(tagName);
-		if (nodeList.getLength() > 0) { // 如果有多个节点名称相同，只读取第一个节点
-			return nodeList.item(0).getFirstChild().getNodeValue().toString();
-		}
-		return "";
-	}
+    /**
+     * readTag: 读取节点文本值
+     *
+     * @param tagName 节点名称
+     * @return text 节点文本值
+     */
+    public String readTag(String tagName) {
+        NodeList nodeList = doc.getElementsByTagName(tagName);
+        if (nodeList.getLength() > 0) { // 如果有多个节点名称相同，只读取第一个节点
+            return nodeList.item(0).getFirstChild().getNodeValue().toString();
+        }
+        return "";
+    }
 
-	/**
-	 * readTags: 读取节点列表
-	 * @param tagName 节点名称
-	 * @return list 节点列表
-	 */
-	public NodeList readTags(String tagName) {
-		return doc.getElementsByTagName(tagName);
-	}
+    /**
+     * readTags: 读取节点列表
+     *
+     * @param tagName 节点名称
+     * @return list 节点列表
+     */
+    public NodeList readTags(String tagName) {
+        return doc.getElementsByTagName(tagName);
+    }
 
-	/**
-	 * getNodeValue: 获取节点文本值
-	 * @param node 节点
-	 * @return text 节点文本值
-	 */
-	public static String getNodeValue(Node node) {
-		return (node != null) ? node.getNodeValue().toString() : "";
-	}
+    /**
+     * getNodeValue: 获取节点文本值
+     *
+     * @param node 节点
+     * @return text 节点文本值
+     */
+    public static String getNodeValue(Node node) {
+        return (node != null) ? node.getNodeValue().toString() : "";
+    }
 
-	/**
-	 * getNodeAttrValue: 获取节点属性值
-	 * @param node 节点
-	 * @param attr 属性
-	 * @return text 节点属性值
-	 */
-	public static String getNodeAttrValue(Node node, String attr) {
-		return getNodeValue(node.getAttributes().getNamedItem(attr));
-	}
+    /**
+     * getNodeAttrValue: 获取节点属性值
+     *
+     * @param node 节点
+     * @param attr 属性
+     * @return text 节点属性值
+     */
+    public static String getNodeAttrValue(Node node, String attr) {
+        return getNodeValue(node.getAttributes().getNamedItem(attr));
+    }
 }

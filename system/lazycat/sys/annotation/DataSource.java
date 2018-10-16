@@ -11,34 +11,33 @@ import java.lang.annotation.RetentionPolicy;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface DataSource {
 
-	/**
-	 * ONCE: 单次调用
-	 */
-	public static final int ONCE = 1;
+    /**
+     * ONCE: 单次调用
+     */
+    public static final int ONCE = 1;
 
-	/**
-	 * ITERATION: 迭代调用
-	 */
-	public static final int ITERATION = 2;
+    /**
+     * ITERATION: 迭代调用
+     */
+    public static final int ITERATION = 2;
 
-	/**
-	 * SEQUENCE: 顺序调用
-	 */
-	public static final int SEQUENCE = 3;
+    /**
+     * SEQUENCE: 顺序调用
+     */
+    public static final int SEQUENCE = 3;
 
-	/**
-	 * src: 数据源文件
-	 */
-	String src();
+    /**
+     * src: 数据源文件
+     */
+    String src();
 
-	/**
-	 * field: 数据字段
-	 */
-	String field();
+    /**
+     * field: 数据字段
+     */
+    String field();
 
-	/**
-	 * method: 数据调用方式
-	 */
-	int method();
-
+    /**
+     * method: 数据调用方式
+     */
+    int method();
 }
