@@ -62,8 +62,13 @@ public final class Server extends Thread {
     private static String initCurrentPath() {
         String currentPath = ".";
         try { // 解析错误时，默认设为"."
-            File directory = new File("");
-            currentPath = directory.getCanonicalPath();
+            String filePath = Server.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+            if (new File(filePath).isFile()) { // JAR包启动
+                filePath = java.net.URLDecoder.decode(filePath, "UTF-8");
+                currentPath = new File(filePath).getParentFile().getAbsolutePath();
+            } else { // IDE启动
+                currentPath = new File("").getCanonicalPath();
+            }
         } catch (Exception e) { // 解析错误
             e.printStackTrace();
         }

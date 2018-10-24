@@ -3,13 +3,13 @@ package lazycat.sys.core;
 import java.lang.reflect.Method;
 import java.util.PriorityQueue;
 
+import org.openqa.selenium.WebDriver;
+
 import lazycat.sys.annotation.DataSource;
 import lazycat.sys.driver.PageDriver;
 import lazycat.sys.map.BrowserMap;
 import lazycat.sys.map.CaseMap;
 import lazycat.sys.map.DataMap;
-
-import org.openqa.selenium.WebDriver;
 
 public class Browser extends Thread {
 

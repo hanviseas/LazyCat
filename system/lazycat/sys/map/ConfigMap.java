@@ -3,11 +3,11 @@ package lazycat.sys.map;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
-import lazycat.sys.core.Config;
-import lazycat.sys.core.Server;
-
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
+import lazycat.sys.core.Config;
+import lazycat.sys.core.Server;
 
 public class ConfigMap {
 
